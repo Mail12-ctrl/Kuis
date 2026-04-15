@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Kuis HP</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom, #4facfe, #00f2fe);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.game {
+  background: white;
+  width: 90%;
+  max-width: 350px;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+h2 {
+  font-size: 18px;
+}
+
+.timer {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 0;
+  color: red;
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 10px;
+  background: #4facfe;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+.skor {
+  margin-top: 10px;
+  font-weight: bold;
+}
+</style>
+
+</head>
+<body>
+
+<div class="game">
+  <h2 id="soal">Soal muncul di sini</h2>
+  <div class="timer" id="timer">10</div>
+  <div id="pilihan"></div>
+  <div class="skor" id="skor"></div>
+</div>
+
+<script>
+const soal = [
+  {
+    tanya: "Ibukota Indonesia adalah?",
+    opsi: ["Jakarta", "Bandung", "Surabaya", "Medan"],
+    benar: 0
+  },
+  {
+    tanya: "5 x 2 = ?",
+    opsi: ["8", "10", "12", "15"],
+    benar: 1
+  },
+  {
+    tanya: "Warna daun adalah?",
+    opsi: ["Merah", "Hijau", "Biru", "Hitam"],
+    benar: 1
+  }
+];
+
+let index = 0;
+let skor = 0;
+let waktu = 10;
+let interval;
+
+function mulaiTimer() {
+  waktu = 10;
+  document.getElementById("timer").innerText = waktu;
+
+  interval = setInterval(() => {
+    waktu--;
+    document.getElementById("timer").innerText = waktu;
+
+    if (waktu === 0) {
+      clearInterval(interval);
+      alert("Waktu habis!");
+      index++;
+      tampilSoal();
+    }
+  }, 1000);
+}
+
+function tampilSoal() {
+  if (index >= soal.length) {
+    document.getElementById("soal").innerText = "Game Selesai 🎉";
+    document.getElementById("pilihan").innerHTML = "";
+    document.getElementById("timer").innerText = "";
+    document.getElementById("skor").innerText = "Skor: " + skor;
+    return;
+  }
+
+  clearInterval(interval);
+
+  let s = soal[index];
+  document.getElementById("soal").innerText = s.tanya;
+
+  let pilihanHTML = "";
+  s.opsi.forEach((opsi, i) => {
+    pilihanHTML += `<button onclick="cekJawaban(${i})">${opsi}</button>`;
+  });
+
+  document.getElementById("pilihan").innerHTML = pilihanHTML;
+
+  mulaiTimer();
+}
+
+function cekJawaban(jawaban) {
+  clearInterval(interval);
+
+  if (jawaban === soal[index].benar) {
+    skor++;
+    alert("✅ Benar!");
+  } else {
+    alert("❌ Salah!");
+  }
+
+  index++;
+  tampilSoal();
+}
+
+tampilSoal();
+</script>
+
+</body>
+</html>
